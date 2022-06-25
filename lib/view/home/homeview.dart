@@ -7,6 +7,7 @@ import 'package:suitmedia/view/utils/common/buttonwidget.dart';
 import 'package:suitmedia/view/utils/common/textwidget.dart';
 import 'package:suitmedia/view/utils/common/topbar.dart';
 import 'package:suitmedia/view/utils/constant.dart';
+import 'package:suitmedia/view/web/webview.dart';
 
 class HomeView extends StatelessWidget {
   String? name;
@@ -20,36 +21,13 @@ class HomeView extends StatelessWidget {
     isMobile = shortestSide < 600.0;
     orientation = MediaQuery.of(context).orientation;
 
-    return BlocBuilder<AuthBloc, AuthState>(
+    return BlocBuilder<UserBloc, UserState>(
       builder: (context, state) {
-        if (state is AuthenticatedState) {
-          name = state.name;
-          return BlocBuilder<UserBloc, UserState>(
-            builder: (context, state) {
-              if (state is UserSuccess) {
-                UserView();
-              }
-              return Stack(
-                children: [
-                  Scaffold(
-                    backgroundColor: bgColor,
-                    appBar: TopBar(
-                      theme: bgColor,
-                      icon: Icons.arrow_back_ios_new_rounded,
-                      title: 'Home',
-                      onTap: () {
-                        Navigator.pop(context);
-                        print('pop');
-                      },
-                    ),
-                    body: body(context, orientation),
-                  ),
-                ],
-              );
-            },
-          );
-        }
+        print('home state: ${state}');
 
+        if (state is UserSuccess) {
+          return UserView();
+        }
         return Stack(
           children: [
             Scaffold(
@@ -58,6 +36,10 @@ class HomeView extends StatelessWidget {
                 theme: bgColor,
                 icon: Icons.arrow_back_ios_new_rounded,
                 title: 'Home',
+                onTap: () {
+                  // Navigator.pop(context);
+                  // print('pop');
+                },
               ),
               body: body(context, orientation),
             ),
@@ -71,8 +53,7 @@ class HomeView extends StatelessWidget {
     ///Responsive layout
     responsiveLayout(orientation);
 
-    //var bloc = context.watch<HomeBloc>();
-    //var bloc = BlocProvider.of<HomeBloc>(context, listen: true);
+    var userbloc = BlocProvider.of<UserBloc>(context, listen: true);
 
     return ListView(
       children: [
@@ -88,38 +69,138 @@ class HomeView extends StatelessWidget {
                   label: 'Welcome',
                   color: txtColor,
                 ),
-                TextWidget(
-                  txtHeight: txtHeight,
-                  scale: 0.90,
-                  mainAxis: MainAxisAlignment.start,
-                  label: '$name',
-                  fontWeight: FontWeight.bold,
-                  color: txtColor,
+                BlocBuilder<AuthBloc, AuthState>(
+                  builder: (context, state) {
+                    if (state is AuthenticatedState) {
+                      name = state.name;
+                      return TextWidget(
+                        txtHeight: txtHeight,
+                        scale: 0.90,
+                        mainAxis: MainAxisAlignment.start,
+                        label: '$name',
+                        fontWeight: FontWeight.bold,
+                        color: txtColor,
+                      );
+                    }
+
+                    return TextWidget(
+                      txtHeight: txtHeight,
+                      scale: 0.90,
+                      mainAxis: MainAxisAlignment.start,
+                      label: 'Nama',
+                      fontWeight: FontWeight.bold,
+                      color: txtColor,
+                    );
+                  },
                 ),
-                Container(
-                  height: profilHeight,
-                  width: profilWidth,
-                  margin: EdgeInsets.only(top: profilHeight * 0.35),
-                  child: const Image(
-                    image: AssetImage("assets/profil/image2.png"),
-                    fit: BoxFit.contain,
-                  ),
+                BlocBuilder<UserBloc, UserState>(
+                  builder: (context, state) {
+                    if (state is UserSelectedSuccess) {
+                      return Container(
+                        height: profilHeight,
+                        width: profilWidth,
+                        margin: EdgeInsets.only(top: profilHeight * 0.35),
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image: state.imgPath != ' '
+                                ? Image.network('${state.imgPath}').image
+                                : const AssetImage("assets/profil/image2.png"),
+                          ),
+                          shape: BoxShape.circle,
+                        ),
+                      );
+                    }
+
+                    return Container(
+                      height: profilHeight,
+                      width: profilWidth,
+                      margin: EdgeInsets.only(top: profilHeight * 0.35),
+                      child: const Image(
+                        image: AssetImage("assets/profil/image2.png"),
+                        fit: BoxFit.contain,
+                      ),
+                    );
+                  },
                 ),
-                TextWidget(
-                  txtHeight: txtHeight,
-                  scale: 0.90,
-                  mainAxis: MainAxisAlignment.center,
-                  label: 'Select a user to show the profile',
-                  color: txt2Color,
+                BlocBuilder<UserBloc, UserState>(
+                  builder: (context, state) {
+                    if (state is UserSelectedSuccess) {
+                      return Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: TextWidget(
+                              txtHeight: txtHeight,
+                              scale: 0.90,
+                              mainAxis: MainAxisAlignment.center,
+                              label: '${state.name}',
+                              color: txtTitleColor,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: TextWidget(
+                              txtHeight: txtHeight,
+                              scale: 0.90,
+                              mainAxis: MainAxisAlignment.center,
+                              label: '${state.email}',
+                              color: txtEmailColor,
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: TextWidget(
+                              txtHeight: txtHeight,
+                              scale: 0.90,
+                              mainAxis: MainAxisAlignment.center,
+                              label: 'website',
+                              color: primaryColor,
+                              textDecoration: TextDecoration.underline,
+                              onPress: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => WebLaunchView()),
+                                );
+                              },
+                            ),
+                          ),
+                        ],
+                      );
+                    }
+
+                    return TextWidget(
+                      txtHeight: txtHeight,
+                      scale: 0.90,
+                      mainAxis: MainAxisAlignment.center,
+                      label: 'Select a user to show the profile',
+                      color: txt2Color,
+                    );
+                  },
                 ),
-                ButtonWidget(
-                  btnHeight: btnHeight,
-                  btnWidth: btnWidth,
-                  padding: EdgeInsets.only(top: heightSize * 0.30),
-                  label: 'Choose a User',
-                  onPress: () {
-                    BlocProvider.of<UserBloc>(context).add(
-                      ChooseUserEvent(),
+                BlocBuilder<UserBloc, UserState>(
+                  builder: (context, state) {
+                    if (state is UserSelectedSuccess) {
+                      return ButtonWidget(
+                        btnHeight: btnHeight,
+                        btnWidth: btnWidth,
+                        padding: EdgeInsets.only(top: heightSize * 0.14),
+                        label: 'Choose a User',
+                        onPress: () {
+                          userbloc.add(ChooseUserEvent());
+                        },
+                      );
+                    }
+
+                    return ButtonWidget(
+                      btnHeight: btnHeight,
+                      btnWidth: btnWidth,
+                      padding: EdgeInsets.only(top: heightSize * 0.25),
+                      label: 'Choose a User',
+                      onPress: () {
+                        userbloc.add(ChooseUserEvent());
+                      },
                     );
                   },
                 ),

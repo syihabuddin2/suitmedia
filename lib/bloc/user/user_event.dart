@@ -8,3 +8,11 @@ abstract class UserEvent extends Equatable {
 }
 
 class ChooseUserEvent extends UserEvent {}
+
+class SelectedUserEvent extends UserEvent {
+  String? imgPath;
+  String? name;
+  String? email;
+
+  SelectedUserEvent({this.imgPath, this.name, this.email});
+}

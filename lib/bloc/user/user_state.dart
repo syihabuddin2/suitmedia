@@ -10,6 +10,14 @@ class UserSuccess extends UserState {
   UserSuccess({this.user});
 }
 
+class UserSelectedSuccess extends UserState {
+  String? imgPath;
+  String? name;
+  String? email;
+
+  UserSelectedSuccess({this.imgPath, this.name, this.email});
+}
+
 class UserLoading extends UserState {}
 
 class UserError extends UserState {

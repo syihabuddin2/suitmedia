@@ -14,6 +14,9 @@ late double txtFieldWidth, txtWidth, btnWidth;
 late double profilHeight;
 late double profilWidth;
 
+///Web View
+late double webHeight, webWidth;
+
 responsiveLayout(Orientation orientation) {
   if (orientation == Orientation.portrait) {
     if (isMobile) {
@@ -29,9 +32,13 @@ responsiveLayout(Orientation orientation) {
 
       ///Home
       profilHeight = heightSize * 0.30;
-      profilWidth = widthSize * 0.40;
+      profilWidth = widthSize * 0.34;
       txtHeight = heightSize * 0.03;
       txtWidth = widthSize * 0.90;
+
+      ///Web View
+      webHeight = heightSize * 1.0;
+      webWidth = widthSize * 1.0;
     } else {
       print('potrait tablet');
       bgHeight = heightSize * 1.0;
@@ -85,4 +92,7 @@ var primaryColor = Color(0xFF2B637B);
 var onprimaryColor = Colors.white;
 var bgColor = Color(0xFFFFFFFF);
 var txtColor = Color(0xFF04021D);
-var txt2Color = Colors.grey;
+var txt2Color = Color(0xFF808080);
+var txt3Color = Color(0xFF686777);
+var txtTitleColor = Color(0xFF626166);
+var txtEmailColor = Color(0XFF626166);

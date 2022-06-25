@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:suitmedia/bloc/user/user_bloc.dart';
 import 'package:suitmedia/model/user/user.dart';
+import 'package:suitmedia/view/home/homeview.dart';
+import 'package:suitmedia/view/utils/common/textwidget.dart';
 import 'package:suitmedia/view/utils/common/topbar.dart';
 import 'package:suitmedia/view/utils/constant.dart';
 
 class UserView extends StatelessWidget {
-  String? name;
   User? user;
 
   @override
@@ -20,8 +21,10 @@ class UserView extends StatelessWidget {
 
     return BlocBuilder<UserBloc, UserState>(
       builder: (context, state) {
-        /* if (state is AuthenticatedState) {
-          name = state.name;
+        print('user state: ${state}');
+
+        if (state is UserSuccess) {
+          user = state.user;
           return Stack(
             children: [
               Scaffold(
@@ -31,11 +34,15 @@ class UserView extends StatelessWidget {
                   icon: Icons.arrow_back_ios_new_rounded,
                   title: 'Users',
                 ),
-                body: body(context, orientation),
+                body: body(context, orientation, user!),
               ),
             ],
           );
-        } */
+        }
+
+        if (state is UserSelectedSuccess) {
+          return HomeView();
+        }
 
         return Stack(
           children: [
@@ -46,7 +53,6 @@ class UserView extends StatelessWidget {
                 icon: Icons.arrow_back_ios_new_rounded,
                 title: 'Users',
               ),
-              body: body(context, orientation, user!),
             ),
           ],
         );
@@ -58,18 +64,8 @@ class UserView extends StatelessWidget {
     ///Responsive layout
     responsiveLayout(orientation);
 
-    /* return ListView(
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(20),
-          child: Center(
-            child: Column(
-              children: [],
-            ),
-          ),
-        ),
-      ],
-    ); */
+    var userbloc = BlocProvider.of<UserBloc>(context, listen: true);
+
     return ListView.builder(
       itemCount: user.data!.length,
       itemBuilder: (context, index) {
@@ -77,49 +73,38 @@ class UserView extends StatelessWidget {
           children: [
             ListTile(
               onTap: () {
-                //SmartDialog.showToast(surah.data![index].number.toString());
+                userbloc.add(SelectedUserEvent(
+                  imgPath: '${user.data![index].avatar}',
+                  name:
+                      '${user.data![index].first_name} ${user.data![index].last_name}',
+                  email: '${user.data![index].email}',
+                ));
               },
               leading: Container(
                 height: 45,
                 width: 45,
-                decoration: const BoxDecoration(
+                decoration: BoxDecoration(
                   image: DecorationImage(
-                    image: AssetImage("lib/assets/icon/octagonal.png"),
+                    image: Image.network('${user.data![index].avatar}').image,
                   ),
-                ),
-                child: Center(
-                  child: Text(
-                    "${user.data![index].first_name}",
-                    style: TextStyle(
-                      color: txtColor,
-                    ),
-                  ),
+                  shape: BoxShape.circle,
                 ),
               ),
-              title: Text(
-                '${user.data![index].email}',
-                style: const TextStyle(
-                  color: Color(0XFF260F68),
-                ),
+              title: TextWidget(
+                txtHeight: txtHeight,
+                scale: 0.90,
+                mainAxis: MainAxisAlignment.start,
+                label:
+                    '${user.data![index].first_name} ${user.data![index].last_name}',
+                color: txtColor,
               ),
-              /* subtitle: Text(
-                '${user.data![index].revelationType} - ${surah.data![index].numberOfAyahs} verses',
-                style: const TextStyle(
-                  color: Color.fromARGB(255, 168, 167, 168),
-                ),
-              ), */
-              /* trailing: SizedBox(
-                height: tabCHeight * 0.08,
-                child: FittedBox(
-                  child: Text(
-                    '${surah.data![index].name}',
-                    style: const TextStyle(
-                      color: Color(0XFF9345F2),
-                      fontFamily: 'Noorehidayat',
-                    ),
-                  ),
-                ),
-              ), */
+              subtitle: TextWidget(
+                txtHeight: txtHeight,
+                scale: 0.70,
+                mainAxis: MainAxisAlignment.start,
+                label: '${user.data![index].email}',
+                color: txt3Color,
+              ),
             ),
             Divider(height: 25, thickness: 2, color: Colors.grey[300]),
           ],

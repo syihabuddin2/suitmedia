@@ -22,9 +22,9 @@ class MyApp extends StatelessWidget {
             return AuthBloc();
           },
         ),
-        BlocProvider<UserBloc>(
+        BlocProvider(
           create: (context) {
-            return UserBloc(userService: UserService())..add(ChooseUserEvent());
+            return UserBloc(userService: UserService());
           },
         ),
       ],
@@ -33,6 +33,7 @@ class MyApp extends StatelessWidget {
         navigatorObservers: [FlutterSmartDialog.observer],
         builder: FlutterSmartDialog.init(),
         home: BlocBuilder<AuthBloc, AuthState>(builder: (context, state) {
+          print('main state: ${state}');
           if (state is AuthenticatedState) {
             return HomeView();
           } else {

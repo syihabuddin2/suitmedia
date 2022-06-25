@@ -24,11 +24,23 @@ class UserBloc extends Bloc<UserEvent, UserState> {
         yield UserLoading();
         final responseUserData = await userService.getUser(id: 1);
 
-        print("responseUserData: $responseUserData");
-
         if (responseUserData.data != null) {
           yield UserSuccess(user: responseUserData);
         }
+      } catch (e) {
+        yield UserError(error: e.toString());
+      }
+    }
+
+    if (event is SelectedUserEvent) {
+      try {
+        yield UserLoading();
+
+        yield UserSelectedSuccess(
+          imgPath: event.imgPath != ' ' ? event.imgPath : ' ',
+          name: event.name != ' ' ? event.name : ' ',
+          email: event.email != ' ' ? event.email : ' ',
+        );
       } catch (e) {
         yield UserError(error: e.toString());
       }

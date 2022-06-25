@@ -34,6 +34,8 @@ class LoginView extends StatelessWidget {
       },
       child: BlocBuilder<AuthBloc, AuthState>(
         builder: (context, state) {
+          print('login state: ${state}');
+
           if (state is AuthenticatedState) {
             Navigator.push(
               context,
