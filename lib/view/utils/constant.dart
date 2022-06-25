@@ -14,6 +14,9 @@ late double txtFieldWidth, txtWidth, btnWidth;
 late double profilHeight;
 late double profilWidth;
 
+///User
+late double imgWidth;
+
 ///Web View
 late double webHeight, webWidth;
 
@@ -36,6 +39,9 @@ responsiveLayout(Orientation orientation) {
       txtHeight = heightSize * 0.03;
       txtWidth = widthSize * 0.90;
 
+      ///User
+      imgWidth = widthSize * 0.20;
+
       ///Web View
       webHeight = heightSize * 1.0;
       webWidth = widthSize * 1.0;
@@ -44,15 +50,22 @@ responsiveLayout(Orientation orientation) {
       bgHeight = heightSize * 1.0;
       icphotoHeight = heightSize * 0.30;
       txtFieldHeight = heightSize * 0.10;
-      txtFieldWidth = widthSize * 0.20;
+      txtFieldWidth = widthSize * 0.80;
       btnHeight = heightSize * 0.05;
-      btnWidth = widthSize * 0.90;
+      btnWidth = widthSize * 0.80;
 
       ///Home
-      profilHeight = heightSize * 0.30;
-      profilWidth = widthSize * 0.40;
-      txtHeight = heightSize * 0.10;
+      profilHeight = heightSize * 0.20;
+      profilWidth = widthSize * 0.25;
+      txtHeight = heightSize * 0.05;
       txtWidth = widthSize * 0.20;
+
+      ///User
+      imgWidth = widthSize * 0.20;
+
+      ///Web View
+      webHeight = heightSize * 1.0;
+      webWidth = widthSize * 1.0;
     }
   } else {
     if (isMobile) {
@@ -69,20 +82,34 @@ responsiveLayout(Orientation orientation) {
       profilWidth = widthSize * 0.40;
       txtHeight = heightSize * 0.10;
       txtWidth = widthSize * 0.90;
+
+      ///User
+      imgWidth = widthSize * 0.10;
+
+      ///Web View
+      webHeight = heightSize * 1.0;
+      webWidth = widthSize * 1.0;
     } else {
       print('landscape tablet');
       bgHeight = heightSize * 1.0;
       icphotoHeight = heightSize * 0.30;
-      txtFieldHeight = heightSize * 0.20;
+      txtFieldHeight = heightSize * 0.10;
       txtFieldWidth = widthSize * 0.70;
-      btnHeight = heightSize * 0.05;
-      btnWidth = widthSize * 0.90;
+      btnHeight = heightSize * 0.07;
+      btnWidth = widthSize * 0.70;
 
       ///Home
       profilHeight = heightSize * 0.30;
       profilWidth = widthSize * 0.40;
       txtHeight = heightSize * 0.10;
       txtWidth = widthSize * 0.90;
+
+      ///User
+      imgWidth = widthSize * 0.10;
+
+      ///Web View
+      webHeight = heightSize * 1.0;
+      webWidth = widthSize * 1.0;
     }
   }
 }

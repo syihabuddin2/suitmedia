@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:suitmedia/bloc/user/user_bloc.dart';
 import 'package:suitmedia/model/user/user.dart';
-import 'package:suitmedia/view/home/homeview.dart';
 import 'package:suitmedia/view/utils/common/textwidget.dart';
 import 'package:suitmedia/view/utils/common/topbar.dart';
 import 'package:suitmedia/view/utils/constant.dart';
@@ -19,12 +19,36 @@ class UserView extends StatelessWidget {
     isMobile = shortestSide < 600.0;
     orientation = MediaQuery.of(context).orientation;
 
-    return BlocBuilder<UserBloc, UserState>(
-      builder: (context, state) {
-        print('user state: ${state}');
+    return BlocListener<UserBloc, UserState>(
+      listener: (context, state) {
+        if (state is UserLoading) {
+          SmartDialog.showLoading();
+        } else {
+          SmartDialog.dismiss();
+        }
 
-        if (state is UserSuccess) {
-          user = state.user;
+        if (state is UserSelectedSuccess) {
+          Navigator.of(context).pop();
+        }
+      },
+      child: BlocBuilder<UserBloc, UserState>(
+        builder: (context, state) {
+          if (state is UserSuccess) {
+            user = state.user;
+            return Scaffold(
+              backgroundColor: bgColor,
+              appBar: TopBar(
+                theme: bgColor,
+                icon: Icons.arrow_back_ios_new_rounded,
+                title: 'Users',
+                onTap: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              body: body(context, orientation, user!),
+            );
+          }
+
           return Stack(
             children: [
               Scaffold(
@@ -34,29 +58,11 @@ class UserView extends StatelessWidget {
                   icon: Icons.arrow_back_ios_new_rounded,
                   title: 'Users',
                 ),
-                body: body(context, orientation, user!),
               ),
             ],
           );
-        }
-
-        if (state is UserSelectedSuccess) {
-          return HomeView();
-        }
-
-        return Stack(
-          children: [
-            Scaffold(
-              backgroundColor: bgColor,
-              appBar: TopBar(
-                theme: bgColor,
-                icon: Icons.arrow_back_ios_new_rounded,
-                title: 'Users',
-              ),
-            ),
-          ],
-        );
-      },
+        },
+      ),
     );
   }
 
@@ -81,8 +87,7 @@ class UserView extends StatelessWidget {
                 ));
               },
               leading: Container(
-                height: 45,
-                width: 45,
+                width: imgWidth,
                 decoration: BoxDecoration(
                   image: DecorationImage(
                     image: Image.network('${user.data![index].avatar}').image,
@@ -92,7 +97,7 @@ class UserView extends StatelessWidget {
               ),
               title: TextWidget(
                 txtHeight: txtHeight,
-                scale: 0.90,
+                scale: isMobile ? 0.90 : 0.60,
                 mainAxis: MainAxisAlignment.start,
                 label:
                     '${user.data![index].first_name} ${user.data![index].last_name}',
@@ -100,7 +105,7 @@ class UserView extends StatelessWidget {
               ),
               subtitle: TextWidget(
                 txtHeight: txtHeight,
-                scale: 0.70,
+                scale: isMobile ? 0.70 : 0.46,
                 mainAxis: MainAxisAlignment.start,
                 label: '${user.data![index].email}',
                 color: txt3Color,

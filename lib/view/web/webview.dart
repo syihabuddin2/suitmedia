@@ -33,10 +33,9 @@ class _WebLaunchViewState extends State<WebLaunchView> {
       appBar: TopBar(
         theme: bgColor,
         icon: Icons.arrow_back_ios_new_rounded,
-        title: '',
+        title: 'Website',
         onTap: () {
-          Navigator.pop(context);
-          // print('pop');
+          Navigator.of(context).pop();
         },
       ),
       body: body(context, orientation),

@@ -31,18 +31,16 @@ class LoginView extends StatelessWidget {
         if (state is AuthError) {
           SmartDialog.showToast(state.error.toString());
         }
+
+        if (state is AuthenticatedState) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => HomeView()),
+          );
+        }
       },
       child: BlocBuilder<AuthBloc, AuthState>(
         builder: (context, state) {
-          print('login state: ${state}');
-
-          if (state is AuthenticatedState) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => HomeView()),
-            );
-          }
-
           return Stack(
             children: [
               Container(

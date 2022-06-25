@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:suitmedia/bloc/auth/auth_bloc.dart';
 import 'package:suitmedia/bloc/user/user_bloc.dart';
 import 'package:suitmedia/view/user/userview.dart';
@@ -21,31 +22,41 @@ class HomeView extends StatelessWidget {
     isMobile = shortestSide < 600.0;
     orientation = MediaQuery.of(context).orientation;
 
-    return BlocBuilder<UserBloc, UserState>(
-      builder: (context, state) {
-        print('home state: ${state}');
+    return BlocListener<UserBloc, UserState>(
+      listener: (context, state) {
+        if (state is UserLoading) {
+          SmartDialog.showLoading();
+        } else {
+          SmartDialog.dismiss();
+        }
 
         if (state is UserSuccess) {
-          return UserView();
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => UserView()),
+          );
         }
-        return Stack(
-          children: [
-            Scaffold(
-              backgroundColor: bgColor,
-              appBar: TopBar(
-                theme: bgColor,
-                icon: Icons.arrow_back_ios_new_rounded,
-                title: 'Home',
-                onTap: () {
-                  // Navigator.pop(context);
-                  // print('pop');
-                },
-              ),
-              body: body(context, orientation),
-            ),
-          ],
-        );
       },
+      child: BlocBuilder<UserBloc, UserState>(
+        builder: (context, state) {
+          return Stack(
+            children: [
+              Scaffold(
+                backgroundColor: bgColor,
+                appBar: TopBar(
+                  theme: bgColor,
+                  icon: Icons.arrow_back_ios_new_rounded,
+                  title: 'Home',
+                  onTap: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                body: body(context, orientation),
+              ),
+            ],
+          );
+        },
+      ),
     );
   }
 
@@ -53,7 +64,7 @@ class HomeView extends StatelessWidget {
     ///Responsive layout
     responsiveLayout(orientation);
 
-    var userbloc = BlocProvider.of<UserBloc>(context, listen: true);
+    var userbloc = BlocProvider.of<UserBloc>(context, listen: false);
 
     return ListView(
       children: [
@@ -64,7 +75,7 @@ class HomeView extends StatelessWidget {
               children: [
                 TextWidget(
                   txtHeight: txtHeight,
-                  scale: 0.60,
+                  scale: isMobile ? 0.60 : 0.70,
                   mainAxis: MainAxisAlignment.start,
                   label: 'Welcome',
                   color: txtColor,
@@ -75,7 +86,7 @@ class HomeView extends StatelessWidget {
                       name = state.name;
                       return TextWidget(
                         txtHeight: txtHeight,
-                        scale: 0.90,
+                        scale: isMobile ? 0.90 : 0.80,
                         mainAxis: MainAxisAlignment.start,
                         label: '$name',
                         fontWeight: FontWeight.bold,
@@ -85,7 +96,7 @@ class HomeView extends StatelessWidget {
 
                     return TextWidget(
                       txtHeight: txtHeight,
-                      scale: 0.90,
+                      scale: isMobile ? 0.90 : 0.80,
                       mainAxis: MainAxisAlignment.start,
                       label: 'Nama',
                       fontWeight: FontWeight.bold,
@@ -105,6 +116,7 @@ class HomeView extends StatelessWidget {
                             image: state.imgPath != ' '
                                 ? Image.network('${state.imgPath}').image
                                 : const AssetImage("assets/profil/image2.png"),
+                            fit: BoxFit.contain,
                           ),
                           shape: BoxShape.circle,
                         ),
@@ -131,7 +143,7 @@ class HomeView extends StatelessWidget {
                             padding: const EdgeInsets.all(8.0),
                             child: TextWidget(
                               txtHeight: txtHeight,
-                              scale: 0.90,
+                              scale: isMobile ? 0.90 : 0.70,
                               mainAxis: MainAxisAlignment.center,
                               label: '${state.name}',
                               color: txtTitleColor,
@@ -142,7 +154,7 @@ class HomeView extends StatelessWidget {
                             padding: const EdgeInsets.all(8.0),
                             child: TextWidget(
                               txtHeight: txtHeight,
-                              scale: 0.90,
+                              scale: isMobile ? 0.90 : 0.70,
                               mainAxis: MainAxisAlignment.center,
                               label: '${state.email}',
                               color: txtEmailColor,
@@ -152,7 +164,7 @@ class HomeView extends StatelessWidget {
                             padding: const EdgeInsets.all(8.0),
                             child: TextWidget(
                               txtHeight: txtHeight,
-                              scale: 0.90,
+                              scale: isMobile ? 0.90 : 0.70,
                               mainAxis: MainAxisAlignment.center,
                               label: 'website',
                               color: primaryColor,
@@ -170,9 +182,22 @@ class HomeView extends StatelessWidget {
                       );
                     }
 
+                    if (orientation == Orientation.landscape) {
+                      return Padding(
+                        padding: const EdgeInsets.only(top: 40),
+                        child: TextWidget(
+                          txtHeight: txtHeight,
+                          scale: isMobile ? 0.90 : 0.80,
+                          mainAxis: MainAxisAlignment.center,
+                          label: 'Select a user to show the profile',
+                          color: txt2Color,
+                        ),
+                      );
+                    }
+
                     return TextWidget(
                       txtHeight: txtHeight,
-                      scale: 0.90,
+                      scale: isMobile ? 0.90 : 0.70,
                       mainAxis: MainAxisAlignment.center,
                       label: 'Select a user to show the profile',
                       color: txt2Color,
@@ -211,4 +236,6 @@ class HomeView extends StatelessWidget {
       ],
     );
   }
+
+  clearData() {}
 }

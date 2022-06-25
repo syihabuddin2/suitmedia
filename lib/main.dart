@@ -4,9 +4,7 @@ import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:suitmedia/bloc/auth/auth_bloc.dart';
 import 'package:suitmedia/bloc/user/user_bloc.dart';
 import 'package:suitmedia/services/user/userservice.dart';
-import 'package:suitmedia/view/home/homeview.dart';
 import 'package:suitmedia/view/login/loginview.dart';
-import 'package:suitmedia/view/user/userview.dart';
 
 void main() {
   runApp(MyApp());
@@ -33,12 +31,7 @@ class MyApp extends StatelessWidget {
         navigatorObservers: [FlutterSmartDialog.observer],
         builder: FlutterSmartDialog.init(),
         home: BlocBuilder<AuthBloc, AuthState>(builder: (context, state) {
-          print('main state: ${state}');
-          if (state is AuthenticatedState) {
-            return HomeView();
-          } else {
-            return LoginView();
-          }
+          return LoginView();
         }),
       ),
     );
