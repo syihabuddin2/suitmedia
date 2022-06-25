@@ -8,8 +8,6 @@ import 'package:suitmedia/view/utils/common/textfieldwidget.dart';
 import 'package:suitmedia/view/utils/constant.dart';
 
 class LoginView extends StatelessWidget {
-  final GlobalKey<ScaffoldState> scaffoldLoginKey = GlobalKey<ScaffoldState>();
-
   final TextEditingController nameController = TextEditingController();
   final TextEditingController palindromeController = TextEditingController();
 
@@ -36,9 +34,11 @@ class LoginView extends StatelessWidget {
       },
       child: BlocBuilder<AuthBloc, AuthState>(
         builder: (context, state) {
-          print("AuthState login view: ${state}");
           if (state is AuthenticatedState) {
-            return HomeView();
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => HomeView()),
+            );
           }
 
           return Stack(
@@ -81,21 +81,21 @@ class LoginView extends StatelessWidget {
                   ),
                 ),
                 TextFieldWidget(
-                  txtHeight: txtHeight,
-                  txtWidth: txtWidth,
+                  txtHeight: txtFieldHeight,
+                  txtWidth: txtFieldWidth,
                   txtController: nameController,
                   label: 'Name',
                 ),
                 TextFieldWidget(
-                  txtHeight: txtHeight,
-                  txtWidth: txtWidth,
+                  txtHeight: txtFieldHeight,
+                  txtWidth: txtFieldWidth,
                   txtController: palindromeController,
                   label: 'Palindrome',
                 ),
                 ButtonWidget(
                   btnHeight: btnHeight,
                   btnWidth: btnWidth,
-                  margin: EdgeInsets.only(top: btnHeight * 0.80),
+                  padding: EdgeInsets.only(top: btnHeight * 0.80),
                   label: 'Check'.toUpperCase(),
                   onPress: () {
                     check();
@@ -104,7 +104,7 @@ class LoginView extends StatelessWidget {
                 ButtonWidget(
                   btnHeight: btnHeight,
                   btnWidth: btnWidth,
-                  margin: EdgeInsets.only(top: btnHeight * 0.40),
+                  padding: EdgeInsets.only(top: btnHeight * 0.40),
                   label: 'Next'.toUpperCase(),
                   onPress: () {
                     BlocProvider.of<AuthBloc>(context).add(

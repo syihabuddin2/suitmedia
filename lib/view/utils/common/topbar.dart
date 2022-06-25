@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:suitmedia/view/utils/constant.dart';
 
 class TopBar extends StatelessWidget implements PreferredSizeWidget {
   Color? theme;
@@ -29,13 +30,18 @@ class TopBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       backgroundColor: theme,
       elevation: 0.0,
-      leading: Icon(icon),
+      leading: IconButton(
+        icon: Icon(icon, color: primaryColor),
+        onPressed: onTap,
+      ),
+      centerTitle: true,
       title: SizedBox(
-        height: size.height * 0.50,
+        height: size.height * 0.40,
         child: FittedBox(
           child: Text(
             title!,
-            style: const TextStyle(
+            style: TextStyle(
+              color: primaryColor,
               fontWeight: FontWeight.bold,
             ),
           ),
