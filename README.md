@@ -1,16 +1,23 @@
-# suitmedia
+# Suitmedia
 
-A new Flutter project.
+Screening Test
 
-## Getting Started
 
-This project is a starting point for a Flutter application.
+## API Reference
 
-A few resources to get you started if this is your first Flutter project:
+#### Get all users
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+```http
+  GET https://reqres.in/api/users
+```
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `page` | `string` | Mengambil data user berdasarkan halaman |
+
+
+## Contact
+
+[Syihabuddin](https://instagram.com/syihabuddin2) - syihabuddin2@gmail.com
+
+Project Link : [Suitmedia](https://github.com/syihabuddin2)
